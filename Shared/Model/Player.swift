@@ -8,15 +8,17 @@
 import Foundation
 
 struct Player : Identifiable, Equatable {
-    
     var id: UUID = UUID()
     var name: String
-    var score: [Int] = [0,0,0]
+    var scores: [Int] = [0,0,0]
     
-    func getTotal() -> Int {
-        return self.score.reduce(0, +)
+    var total: Int {
+        return self.scores.reduce(0, +)
     }
     
+    mutating func resetScores() {
+        self.scores = [0,0,0]
+    }
 }
 
 extension Player {

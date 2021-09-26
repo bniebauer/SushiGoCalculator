@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct SushiGoCalculatorApp: App {
+    @ObservedObject private var data = GameData()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GameView(game: $data.game)
         }
     }
 }

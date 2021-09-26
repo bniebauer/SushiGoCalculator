@@ -7,22 +7,30 @@
 
 import Foundation
 
-class Game: ObservableObject {
-    @Published var players = [Player]()
-    @Published var currentRound = 0
+class Game {
+    var players: [Player] = []
+    var currentRound = 0
     
     func add(player: Player) {
         self.players.append(player)
     }
     
-    func remove(at offset: IndexSet) {
-        self.players.remove(atOffsets: offset)
+    func remove(_ name: String) {
+        guard let index = players.firstIndex(where: {$0.name == name}) else {
+            fatalError("Could not find player with name: \(name)")
+        }
+        self.players.remove(at: index)
     }
     
-    func remove(player: Player) {
-        if let playerIndex = players.firstIndex(of: player) {
-            self.players.remove(at: playerIndex)
+    func addScore(of score: Int, for name: String) {
+        if players.isEmpty {
+            return
         }
+        guard let index = players.firstIndex(where: {$0.name == name}) else {
+            fatalError("Could not locate player")
+        }
+        
+        players[index].scores.insert(score, at: currentRound)
     }
     
     func scoreRound() {
@@ -30,6 +38,10 @@ class Game: ObservableObject {
     }
     
     func resetScores() {
-        
+        self.currentRound = 0
+        for index in 0...players.count - 1 {
+            self.players[index].scores = [0,0,0]
+        }
     }
 }
+

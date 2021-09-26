@@ -10,24 +10,26 @@ import SwiftUI
 struct PlayerListView: View {
     @Binding var players: [Player]
     @State private var isPresented = false
+    @State private var newPlayer = ""
     var body: some View {
-        NavigationView {
-            List{
-                ForEach(players) {player in
-                    Label(player.name, systemImage: "person")
-                }
+        List{
+            ForEach(players) {player in
+                Label(player.name, systemImage: "person")
             }
-            .navigationTitle("Player List")
-            .toolbar {
+            HStack {
+                TextField("New Player", text: $newPlayer)
                 Button(action: {
-                    isPresented = true
+                    withAnimation {
+                        let addedPlayer = Player(name: newPlayer)
+                        players.append(addedPlayer)
+                        newPlayer = ""
+                    }
                 }, label: {
-                    Text("Edit")
+                    Image(systemName: "plus.circle.fill")
                 })
+                .buttonStyle(PlainButtonStyle())
+                .disabled(newPlayer.isEmpty)
             }
-            .sheet(isPresented: $isPresented, content: {
-                EditPlayerListView(players: $players)
-            })
         }
     }
 }
